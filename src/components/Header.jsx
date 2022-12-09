@@ -5,7 +5,7 @@ export const Header = () => {
 	let location = useLocation();
 
 	return (
-		<div className='bg-white border-b shadow-sm sticky top-0 z-50'>
+		<div className='bg-white border-b shadow-sm sticky top-0 z-50 px-3'>
 			<header className='flex justify-between items-center  max-w-6xl mx-auto py-4'>
 				<div>
 					{' '}
