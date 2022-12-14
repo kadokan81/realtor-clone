@@ -1,11 +1,11 @@
 // import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-// import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+// import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore" /* cspell: disable-line */;
 import { FcGoogle } from 'react-icons/fc';
-// import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify'/* cspell: disable-line */;
 // import { db } from '../firebase';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 export default function OAuth() {
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
 	async function onGoogleClick() {
 		// try {
 		//   const auth = getAuth();

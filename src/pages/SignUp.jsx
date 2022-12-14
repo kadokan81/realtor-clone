@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiFillEye } from 'react-icons/ai';
 import { AiFillEyeInvisible } from 'react-icons/ai';
 import OAuth from '../components/OAuth';
+import {
+	getAuth,
+	createUserWithEmailAndPassword,
+	updateProfile,
+} from 'firebase/auth';
+import {
+	doc,
+	serverTimestamp,
+	setDoc,
+} from 'firebase/firestore'; /* cspell: disable-line */
+import { db } from '../firebase';
+import { toast } from 'react-toastify'; /* cspell: disable-line */
 
 export default function SignUp() {
 	const [formData, setForm] = useState({
@@ -10,6 +22,7 @@ export default function SignUp() {
 		email: '',
 		password: '',
 	});
+	const navigate = useNavigate();
 	const [showPassword, setShowPassword] = useState(false);
 	const onChange = (e) => {
 		setForm((prevData) => ({
@@ -17,9 +30,31 @@ export default function SignUp() {
 			[e.target.id]: e.target.value,
 		}));
 	};
-	function onSubmit(e) {
+	async function onSubmit(e) {
 		e.preventDefault();
-		console.log('submit');
+		const auth = getAuth();
+		try {
+			const userCredential = await createUserWithEmailAndPassword(
+				auth,
+				formData.email,
+				formData.password
+			);
+			console.log(userCredential);
+			updateProfile(auth.currentUser, {
+				displayName: formData.name,
+			});
+			const user = userCredential.user;
+			const formDataCopy = { ...formData };
+			delete formDataCopy.password;
+			formDataCopy.timestamp = serverTimestamp();
+
+			await setDoc(doc(db, 'users', user.uid), { ...formDataCopy });
+			toast.success('Sign up was successful');
+			navigate('/');
+		} catch (error) {
+			console.log(error);
+			toast.error(error.message);
+		}
 	}
 	return (
 		<section>
