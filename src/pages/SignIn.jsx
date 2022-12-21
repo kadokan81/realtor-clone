@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiFillEye } from 'react-icons/ai';
 import { AiFillEyeInvisible } from 'react-icons/ai';
 import OAuth from '../components/OAuth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { toast } from 'react-toastify' /* cspell: disable-line */;
 
 export default function SignIn() {
 	const [formData, setForm] = useState({
@@ -10,15 +12,35 @@ export default function SignIn() {
 		password: '',
 	});
 	const [showPassword, setShowPassword] = useState(false);
+
+	const navigate = useNavigate();
 	const onChange = (e) => {
 		setForm((prevData) => ({
 			...prevData,
 			[e.target.id]: e.target.value,
 		}));
 	};
-	function onSubmit(e) {
+	async function onSubmit(e) {
 		e.preventDefault();
-		console.log('submit');
+		try {
+			const auth = getAuth();
+			const userCredentials = await signInWithEmailAndPassword(
+				auth,
+				formData.email,
+				formData.password
+			);
+			console.log('userCredentials', userCredentials);
+			toast.success('Successfully sign In');
+			if (userCredentials.user !== undefined) {
+				navigate('/');
+			}
+		} catch (error) {
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			console.log('errorCode', errorCode);
+			console.log('errorMessage', errorMessage);
+			toast.error(error.message);
+		}
 	}
 	return (
 		<section>
