@@ -17,7 +17,7 @@ export const Header = () => {
 	}, [auth]);
 
 	return (
-		<div className='bg-white border-b shadow-sm sticky top-0 z-50 px-3'>
+		<div className='bg-white border-b shadow-sm sticky top-0 z-40 px-3'>
 			<header className='flex justify-between items-center  max-w-6xl mx-auto py-4'>
 				<div>
 					<Link className='cursor-pointer' to={'/'}>

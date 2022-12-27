@@ -2,14 +2,14 @@ import { getAuth, updateProfile } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
-	collection,
-	deleteDoc,
+	// collection,
+	// deleteDoc,
 	doc,
-	getDocs,
-	orderBy,
-	query,
+	// getDocs,
+	// orderBy,
+	// query,
 	updateDoc,
-	where,
+	// where,
 } from 'firebase/firestore'; /* cspell: disable-line */
 import { db } from '../firebase';
 import { toast } from 'react-toastify'; /* cspell: disable-line */
