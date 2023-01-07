@@ -13,6 +13,8 @@ import {
 } from 'firebase/firestore'; /* cspell: disable-line */
 import { db } from '../firebase';
 import { toast } from 'react-toastify'; /* cspell: disable-line */
+import { FcHome } from 'react-icons/fc';
+import { Link } from 'react-router-dom';
 
 export default function Profile() {
 	const auth = getAuth();
@@ -92,6 +94,16 @@ export default function Profile() {
 							</p>
 						</div>
 					</form>
+					<button
+						type='submit'
+						className='w-full bg-blue-600 text-white uppercase text-sm font-medium px-7 py-3 shadow-md rounded hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-900'>
+						<Link
+							to={'/create-listing'}
+							className='flex items-center justify-center gap-5'>
+							<FcHome className='text-3xl p-1 bg-red-200 rounded-full border-2' />
+							sell or rent your Home
+						</Link>
+					</button>
 				</div>
 			</section>
 		</>
