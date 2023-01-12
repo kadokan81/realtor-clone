@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router';
 export default function CreateListing() {
 	const auth = getAuth();
 	const navigate = useNavigate();
-	const [geolocationEnabled, setGeolocationEnabled] = useState(false);
+	const geolocationEnabled = false;
 	const [loading, setLoading] = useState(false);
 	const [formData, setFormData] = useState({
 		type: 'rent',
@@ -34,8 +34,8 @@ export default function CreateListing() {
 		offer: false,
 		regularPrice: 0,
 		discountedPrice: 0,
-		latitude: 55.7,
-		longitude: 9.5,
+		latitude: 55.71503,
+		longitude: 9.52257,
 		images: {},
 	});
 	const {
@@ -313,7 +313,8 @@ export default function CreateListing() {
 						<div className='w-full'>
 							<p className='text-lg font-semibold'>Latitude</p>
 							<input
-								type='number'
+								type='text'
+								pattern='([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]'
 								id='latitude'
 								value={latitude}
 								onChange={onChange}
@@ -328,7 +329,8 @@ export default function CreateListing() {
 						<div className='w-full'>
 							<p className='text-lg font-semibold'>Longitude</p>
 							<input
-								type='number'
+								type='text'
+								pattern='([0-9]+.{0,1}[0-9]*,{0,1})*[0-9]'
 								id='longitude'
 								value={longitude}
 								onChange={onChange}
@@ -428,7 +430,7 @@ export default function CreateListing() {
 						type='file'
 						id='images'
 						onChange={onChange}
-						accept='.jpg,.png,.jpeg'
+						accept='.jpg,.png,.jpeg,.avif'
 						multiple
 						required
 						className='w-full px-3 text-gray-700 bg-white py-2 border border-gray-300 rounded

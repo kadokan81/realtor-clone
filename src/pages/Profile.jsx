@@ -2,23 +2,32 @@ import { getAuth, updateProfile } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
+	collection,
 	// collection,
 	// deleteDoc,
 	doc,
+	getDocs,
+	orderBy,
+	query,
 	// getDocs,
 	// orderBy,
 	// query,
 	updateDoc,
+	where,
 	// where,
 } from 'firebase/firestore'; /* cspell: disable-line */
 import { db } from '../firebase';
 import { toast } from 'react-toastify'; /* cspell: disable-line */
 import { FcHome } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
+import Spinier from '../components/Spinier';
+import ListingItem from '../components/ListingItem';
 
 export default function Profile() {
 	const auth = getAuth();
 	const navigate = useNavigate();
+	const [listings, setListings] = useState(null);
+	const [loading, setLoading] = useState(true);
 	const [formData, setFormData] = useState({
 		name: auth.currentUser.displayName,
 		email: auth.currentUser.email,
@@ -31,10 +40,33 @@ export default function Profile() {
 		navigate('/');
 	};
 
-	useEffect(() => {}, []);
+	useEffect(() => {
+		async function fetchUserListings() {
+			const listingRef = collection(db, 'listings');
+			const q = query(
+				listingRef,
+				where('userRef', '==', auth.currentUser.uid),
+				orderBy('timestamp', 'desc')
+			);
+			const querySnap = await getDocs(q);
+			const listings = [];
+			querySnap.forEach((doc) => {
+				return listings.push({
+					id: doc.id,
+					data: doc.data(),
+				});
+			});
+			setListings(listings);
+			setLoading(false);
+			console.log('listings');
+			console.log(listings);
+		}
+		fetchUserListings();
+	}, [auth.currentUser.uid]);
 	function onChangeHandler(e) {
 		setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
 	}
+
 	async function onSubmit() {
 		try {
 			if (auth.currentUser.displayName !== name) {
@@ -52,6 +84,7 @@ export default function Profile() {
 			toast.error('Could not update the profile details');
 		}
 	}
+
 	return (
 		<>
 			<section className='px-4 mx-auto max-w-6xl flex flex-col items-center justify-center '>
@@ -106,6 +139,22 @@ export default function Profile() {
 					</button>
 				</div>
 			</section>
+			<div className='max-w-6xl px-3 mt-6 mx-auto'>
+				{!loading && listings.length > 0 && (
+					<>
+						<h2 className='text-2xl text-center font-semibold'>My Listing</h2>
+						<ul className='grid fr'>
+							{listings.map((listing) => (
+								<ListingItem
+									listing={listing}
+									key={listing.id}
+									id={listing.id}
+								/>
+							))}
+						</ul>
+					</>
+				)}
+			</div>
 		</>
 	);
 }
