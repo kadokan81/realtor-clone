@@ -53,7 +53,7 @@ export default function Profile() {
 			querySnap.forEach((doc) => {
 				return listings.push({
 					id: doc.id,
-					data: doc.data(),
+					...doc.data(),
 				});
 			});
 			setListings(listings);
@@ -143,7 +143,7 @@ export default function Profile() {
 				{!loading && listings.length > 0 && (
 					<>
 						<h2 className='text-2xl text-center font-semibold'>My Listing</h2>
-						<ul className='grid fr'>
+						<ul className='mt-6 mb-6 sm:grid  sm:grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4'>
 							{listings.map((listing) => (
 								<ListingItem
 									listing={listing}
