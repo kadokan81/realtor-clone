@@ -3,7 +3,7 @@ import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 import { MdLocationOn, MdEdit, MdDelete } from 'react-icons/md';
 
-export default function ListingItem({ listing, id }) {
+export default function ListingItem({ listing, id, onDelete, onEdit }) {
 	const {
 		name,
 		imgUrls,
@@ -17,7 +17,7 @@ export default function ListingItem({ listing, id }) {
 		bathrooms,
 	} = listing;
 	return (
-		<li className='relative bg-white flex flex-col  rounded-md overflow-hidden shadow-md hover:shadow-xl transition duration-150 ease-in-out'>
+		<li className='relative bg-white flex flex-col  rounded-md overflow-hidden shadow-md hover:shadow-xl transition duration-150 ease-in-out  mb-4 sm:mb-0'>
 			<Link to={`/category/${type}/${id}`} className=''>
 				<Moment
 					fromNow
@@ -59,16 +59,23 @@ export default function ListingItem({ listing, id }) {
 							{bathrooms > 1 ? `${bathrooms} Baths` : '1 Bath'}
 						</p>
 					</div>
-					<div className='flex gap-3 ml-auto mr-1'>
-						<MdEdit
-							className='cursor-pointer h-7 w-full p-1 rounded-full hover:bg-gray-200 transition-bg duration-200 ease-out'
-							color='blue'
-						/>
-						<MdDelete
-							className='cursor-pointer h-7 w-full p-1 rounded-full hover:bg-gray-200 transition-bg duration-200 ease-out'
-							color='red'
-							fontSize={20}
-						/>
+					<div className='flex gap-1 ml-auto '>
+						{onEdit && (
+							<MdEdit
+								className='cursor-pointer h-7 w-full p-1 rounded-full hover:bg-gray-200 transition-bg duration-200 ease-out'
+								color='blue'
+								onClick={() => onEdit()}
+							/>
+						)}
+
+						{onDelete && (
+							<MdDelete
+								className='cursor-pointer h-7 w-full p-1 rounded-full hover:bg-gray-200 transition-bg duration-200 ease-out'
+								color='red'
+								fontSize={20}
+								onClick={() => onDelete()}
+							/>
+						)}
 					</div>
 				</div>
 			</div>

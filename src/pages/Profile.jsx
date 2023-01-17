@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
 	collection,
+	deleteDoc,
 	// collection,
 	// deleteDoc,
 	doc,
@@ -58,8 +59,6 @@ export default function Profile() {
 			});
 			setListings(listings);
 			setLoading(false);
-			console.log('listings');
-			console.log(listings);
 		}
 		fetchUserListings();
 	}, [auth.currentUser.uid]);
@@ -84,7 +83,19 @@ export default function Profile() {
 			toast.error('Could not update the profile details');
 		}
 	}
-
+	async function onDelete(listingId) {
+		if (window.confirm('Are you sure you want to delete?')) {
+			await deleteDoc(doc(db, 'listings', listingId));
+			const updateListings = listings.filter(
+				(linting) => linting.id !== listingId
+			);
+			setListings(updateListings);
+			toast.success('Successfully deleted the listing');
+		}
+	}
+	function onEdit(listingId) {
+		navigate(`/edit-listing/${listingId}`);
+	}
 	return (
 		<>
 			<section className='px-4 mx-auto max-w-6xl flex flex-col items-center justify-center '>
@@ -143,12 +154,14 @@ export default function Profile() {
 				{!loading && listings.length > 0 && (
 					<>
 						<h2 className='text-2xl text-center font-semibold'>My Listing</h2>
-						<ul className='mt-6 mb-6 sm:grid  sm:grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4'>
+						<ul className='mt-6 mb-6 sm:grid sm:grid-cols-2 gap-4  md:grid-cols-3 xl:grid-cols-4'>
 							{listings.map((listing) => (
 								<ListingItem
 									listing={listing}
 									key={listing.id}
 									id={listing.id}
+									onDelete={() => onDelete(listing.id)}
+									onEdit={() => onEdit(listing.id)}
 								/>
 							))}
 						</ul>
