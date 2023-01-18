@@ -21,7 +21,6 @@ import { db } from '../firebase';
 import { toast } from 'react-toastify'; /* cspell: disable-line */
 import { FcHome } from 'react-icons/fc';
 import { Link } from 'react-router-dom';
-import Spinier from '../components/Spinier';
 import ListingItem from '../components/ListingItem';
 
 export default function Profile() {

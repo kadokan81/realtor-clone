@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify' /* cspell: disable-line */;
 import Spinier from '../components/Spinier';
 import {
@@ -8,20 +8,23 @@ import {
 	getDownloadURL,
 } from 'firebase/storage';
 import {
-	addDoc,
-	collection,
+	doc,
+	getDoc,
 	serverTimestamp,
+	updateDoc,
 } from 'firebase/firestore' /* cspell: disable-line */;
 import { db } from '../firebase';
 import { v4 as uuidv4 } from 'uuid' /* cspell: disable-line */;
 import { getAuth } from 'firebase/auth';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
-export default function CreateListing() {
+export default function EditListing() {
 	const auth = getAuth();
 	const navigate = useNavigate();
+	const params = useParams();
 	const geolocationEnabled = false;
 	const [loading, setLoading] = useState(false);
+	const [listing, setListing] = useState(null);
 	const [formData, setFormData] = useState({
 		type: 'rent',
 		name: '',
@@ -54,6 +57,30 @@ export default function CreateListing() {
 		longitude,
 		images,
 	} = formData;
+
+	useEffect(() => {
+		if (listing && listing.userRef !== auth.currentUser.uid) {
+			toast.error("You can't edit this listing");
+			navigate('/');
+		}
+	}, [auth.currentUser.uid, listing, navigate]);
+
+	useEffect(() => {
+		setLoading(true);
+		async function fetchListing() {
+			const docRef = doc(db, 'listings', params.listingId);
+			const docSnap = await getDoc(docRef);
+			if (docSnap.exists()) {
+				setListing(docSnap.data());
+				setFormData({ ...docSnap.data() });
+				setLoading(false);
+			} else {
+				navigate('/');
+				toast.error('Listing does not exist');
+			}
+		}
+		fetchListing();
+	}, [params.listingId, navigate]);
 	function onChange(e) {
 		let boolean = null;
 		if (e.target.value === 'true') {
@@ -145,9 +172,10 @@ export default function CreateListing() {
 		};
 		delete formDataCopy.images;
 		!formDataCopy.offer && delete formDataCopy.discountedPrice;
-		const docRef = await addDoc(collection(db, 'listings'), formDataCopy);
+		const docRef = doc(db, 'listings', params.listingId);
+		await updateDoc(docRef, formDataCopy);
 		setLoading(false);
-		toast.success('Listing created');
+		toast.success('Listing updated');
 		navigate(`/category/${formDataCopy.type}/${docRef.id}`);
 	}
 	if (loading) {
@@ -155,7 +183,7 @@ export default function CreateListing() {
 	}
 	return (
 		<main className='max-w-md mx-auto px-2'>
-			<h1 className='text-3xl text-center mt-6 font-bold'>Create Listing</h1>
+			<h1 className='text-3xl text-center mt-6 font-bold'>Edit Listing</h1>
 			<form onSubmit={onSubmit}>
 				<p className='text-lg mt-6 font-semibold'>Sell/Rent</p>
 				<div className='flex gap-6'>
@@ -447,7 +475,7 @@ export default function CreateListing() {
 					 focus:bg-blue-700 focus:shadow-lg 
 					 active:bg-blue-900 active:shadow-xl
 					 transition duration-150 ease-in-out'>
-					Create listing{' '}
+					Edit listing
 				</button>
 			</form>
 		</main>
