@@ -18,3 +18,12 @@ code {
 body {
 	background-color: rgb(242, 251, 246);
 }
+
+.swiper-button-next:after, /* cspell: disable-line */
+.swiper-button-prev:after {
+	color: #a8dadc;
+}
+
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+	background: #a8dadc !important; /* cspell: disable-line */
+}
