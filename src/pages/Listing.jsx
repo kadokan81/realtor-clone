@@ -8,22 +8,19 @@ import { db } from '../firebase';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
+
+import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper';
+
 import 'swiper/css';
+import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import SwiperCore, {
-	Autoplay,
-	EffectFade,
-	Navigation,
-	Pagination,
-} from 'swiper';
 
 export default function Listing() {
 	const [listing, setListing] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const params = useParams();
 	const navigate = useNavigate();
-	SwiperCore.use([Autoplay, Navigation, Pagination]);
 
 	useEffect(() => {
 		setLoading(true);
@@ -51,9 +48,10 @@ export default function Listing() {
 				modules={[Navigation, Pagination, Autoplay, EffectFade]}
 				spaceBetween={50}
 				slidesPerView={1}
-				navigation
+				navigation={true}
 				autoplay={{ delay: 3000 }}
-				effect='fade'
+				loop={true}
+				effect={'fade'}
 				pagination={{ type: 'progressbar' }} /* cspell: disable-line */
 				onSlideChange={() => console.log('slide change')}
 				onSwiper={(swiper) => console.log(swiper)}>
