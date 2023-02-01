@@ -6,7 +6,7 @@ import Spinier from '../components/Spinier';
 import { db } from '../firebase';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { FaShare } from 'react-icons/fa';
+import { FaBath, FaBed, FaChair, FaParking, FaShare } from 'react-icons/fa';
 
 // Import Swiper styles
 
@@ -16,9 +16,15 @@ import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { MdLocationOn } from 'react-icons/md';
 
 export default function Listing() {
-	const [listing, setListing] = useState(null);
+	const [listing, setListing] = useState({
+		name: '',
+		imgUrls: [],
+		regularPrice: 0,
+		discountedPrice: 0,
+	});
 	const [loading, setLoading] = useState(false);
 	const [shareLinkCopy, setShareLinkCopied] = useState(false);
 	const params = useParams();
@@ -41,9 +47,10 @@ export default function Listing() {
 		fetchListing();
 	}, [navigate, params.listingId]);
 
-	if (loading && listing === null) {
+	if ((loading && listing === null) || listing.name === '') {
 		return <Spinier />;
 	}
+
 	return (
 		<main className='max-w-[1980px] mx-auto relative'>
 			<Swiper
@@ -92,6 +99,70 @@ export default function Listing() {
 					Link Copied
 				</div>
 			)}
+			<div className='flex flex-col gap-4 md:flex-row my-0  mx-0  md:my-4 md:mx-4 p-4 rounded-lg bg-white border-gray-300 border-[3px] shadow-lg '>
+				<div className=' w-full mb-4 md:mb-0'>
+					<p className='text-2xl font font-bold mb-3 text-blue-900 '>
+						{listing.name} - ${' '}
+						{listing.offer
+							? listing.discountedPrice
+									.toString()
+									.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+							: listing.regularPrice
+									.toString()
+									.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+						{listing.type === 'rent' && ' / month'}
+					</p>
+					<div className='flex gap-1 items-center mb-4'>
+						<MdLocationOn className='h-6 w-6 text-green-600 ' />
+						<h3 className=' font-semibold  text-gray-600'>{listing.address}</h3>
+					</div>
+					<div className='flex gap-4 my-3'>
+						<p className='w-[100%] text-center md:w-[40%] bg-red-700 font-bold text-white py-2 px-4 rounded-lg shadow-md cursor-pointer active:bg-red-500 active:shadow-xl transition duration-150'>
+							{listing.type === 'rent' ? 'For Rent' : 'For Sale'}
+						</p>
+						{listing.offer && (
+							<p className='w-[100%] text-center md:w-[40%] bg-green-700 font-bold text-white py-2 px-4 rounded-lg shadow-md cursor-pointer active:bg-red-500 active:shadow-xl transition duration-150'>
+								${' '}
+								{(listing.regularPrice - listing.discountedPrice)
+									.toString()
+									.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+								discount
+							</p>
+						)}
+					</div>
+					<p className='my-3 '>
+						<span className='font-semibold'>Description - </span>
+						{listing.description}
+					</p>
+					<div className='flex flex-wrap gap-6 items-center'>
+						<div className='flex gap-1 items-center'>
+							<FaBed size={'20px'} />
+							<p className='font-bold'>
+								{listing.bedrooms} {listing.bedrooms > 1 ? 'beds' : 'bed'}
+							</p>
+						</div>
+						<div className='flex gap-1 items-center'>
+							<FaBath size={'20px'} />
+							<p className='font-bold'>
+								{listing.bathrooms} {listing.bathrooms > 1 ? 'baths' : 'bath'}
+							</p>
+						</div>
+						<div className='flex gap-1 items-center'>
+							<FaParking size={'20px'} />
+							<p className='font-bold'>
+								{listing.parking ? 'parking' : 'No parking'}
+							</p>
+						</div>
+						<div className='flex gap-1 items-center'>
+							<FaChair size={'20px'} />
+							<p className='font-bold'>
+								{listing.furnished ? 'furnished' : 'Not furnished'}
+							</p>
+						</div>
+					</div>
+				</div>
+				<div className='bg-blue-300 w-full h-[200px]'></div>
+			</div>
 		</main>
 	);
 }
