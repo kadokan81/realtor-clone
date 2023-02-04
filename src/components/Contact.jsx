@@ -18,7 +18,6 @@ export default function Contact({ userRef, listing }) {
 		}
 		getLandLord();
 	}, [userRef, landlord]);
-	function submitHandler() {}
 
 	return (
 		<div>
@@ -26,24 +25,22 @@ export default function Contact({ userRef, listing }) {
 				Contact {landlord?.name} for {listing.name}
 			</h3>
 
-			<form onSubmit={submitHandler}>
-				<textarea
-					name='message'
-					id='message'
-					value={message}
-					onChange={(e) => setMessage(e.target.value)}
-					required
-					minLength={10}
-					maxLength={130}
-					placeholder='Message'
-					className='w-full border-blue-300 border-2 rounded-lg mb-4 '
-				/>
-				<a
-					href={`mailto:${landlord?.email}?Subject=${listing?.name}&body=${message}`}
-					className='block text-center px-7 py-3 bg-blue-600 text-white text-sm uppercase rounded-md w-full shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out'>
-					Send Message
-				</a>
-			</form>
+			<textarea
+				name='message'
+				id='message'
+				value={message}
+				onChange={(e) => setMessage(e.target.value)}
+				required
+				minLength={10}
+				maxLength={130}
+				placeholder='Message'
+				className='w-full border-blue-300 border-2 rounded-lg mb-4 '
+			/>
+			<a
+				href={`mailto:${landlord?.email}?Subject=${listing?.name}&body=${message}`}
+				className='block text-center px-7 py-3 bg-blue-600 text-white text-sm uppercase rounded-md w-full shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out'>
+				Send Message
+			</a>
 		</div>
 	);
 }
