@@ -17,6 +17,8 @@ import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { MdLocationOn } from 'react-icons/md';
+import { getAuth } from 'firebase/auth';
+import Contact from '../components/Contact';
 
 export default function Listing() {
 	const [listing, setListing] = useState({
@@ -27,8 +29,10 @@ export default function Listing() {
 	});
 	const [loading, setLoading] = useState(false);
 	const [shareLinkCopy, setShareLinkCopied] = useState(false);
+	const [contactLandLord, setContactLandLord] = useState(false);
 	const params = useParams();
 	const navigate = useNavigate();
+	const auth = getAuth();
 
 	useEffect(() => {
 		setLoading(true);
@@ -99,8 +103,8 @@ export default function Listing() {
 					Link Copied
 				</div>
 			)}
-			<div className='flex flex-col gap-4 md:flex-row my-0  mx-0  md:my-4 md:mx-4 p-4 rounded-lg bg-white border-gray-300 border-[3px] shadow-lg '>
-				<div className=' w-full mb-4 md:mb-0'>
+			<div className='flex  flex-col gap-4 md:flex-row my-0  mx-0  md:my-4 md:mx-4 p-4 rounded-lg bg-white border-gray-300 border-[3px] shadow-lg '>
+				<div className=' w-full  mb-4 md:mb-0'>
 					<p className='text-2xl font font-bold mb-3 text-blue-900 '>
 						{listing.name} - ${' '}
 						{listing.offer
@@ -117,11 +121,11 @@ export default function Listing() {
 						<h3 className=' font-semibold  text-gray-600'>{listing.address}</h3>
 					</div>
 					<div className='flex gap-4 my-3'>
-						<p className='w-[100%] text-center md:w-[40%] bg-red-700 font-bold text-white py-2 px-4 rounded-lg shadow-md cursor-pointer active:bg-red-500 active:shadow-xl transition duration-150'>
+						<p className='w-[100%] text-center xl:w-[30%] bg-red-700 font-bold text-white py-2 px-4 rounded-lg shadow-md cursor-pointer active:bg-red-500 active:shadow-xl transition duration-150'>
 							{listing.type === 'rent' ? 'For Rent' : 'For Sale'}
 						</p>
 						{listing.offer && (
-							<p className='w-[100%] text-center md:w-[40%] bg-green-700 font-bold text-white py-2 px-4 rounded-lg shadow-md cursor-pointer active:bg-red-500 active:shadow-xl transition duration-150'>
+							<p className='w-[100%] text-center xl:w-[30%] bg-green-700 font-bold text-white py-2 px-4 rounded-lg shadow-md cursor-pointer active:bg-red-500 active:shadow-xl transition duration-150'>
 								${' '}
 								{(listing.regularPrice - listing.discountedPrice)
 									.toString()
@@ -134,32 +138,42 @@ export default function Listing() {
 						<span className='font-semibold'>Description - </span>
 						{listing.description}
 					</p>
-					<div className='flex flex-wrap gap-6 items-center'>
-						<div className='flex gap-1 items-center'>
+					<ul className='flex flex-wrap gap-6 items-center mb-3'>
+						<li className='flex gap-1 items-center'>
 							<FaBed size={'20px'} />
 							<p className='font-bold'>
 								{listing.bedrooms} {listing.bedrooms > 1 ? 'beds' : 'bed'}
 							</p>
-						</div>
-						<div className='flex gap-1 items-center'>
+						</li>
+						<li className='flex gap-1 items-center'>
 							<FaBath size={'20px'} />
 							<p className='font-bold'>
 								{listing.bathrooms} {listing.bathrooms > 1 ? 'baths' : 'bath'}
 							</p>
-						</div>
-						<div className='flex gap-1 items-center'>
+						</li>
+						<li className='flex gap-1 items-center'>
 							<FaParking size={'20px'} />
 							<p className='font-bold'>
 								{listing.parking ? 'parking' : 'No parking'}
 							</p>
-						</div>
-						<div className='flex gap-1 items-center'>
+						</li>
+						<li className='flex gap-1 items-center'>
 							<FaChair size={'20px'} />
 							<p className='font-bold'>
 								{listing.furnished ? 'furnished' : 'Not furnished'}
 							</p>
-						</div>
-					</div>
+						</li>
+					</ul>
+					{listing.userRef !== auth.currentUser?.uid && !contactLandLord && (
+						<button
+							onClick={() => setContactLandLord(true)}
+							className='px-7 py-3 bg-blue-600 text-white text-sm uppercase rounded-md w-full shadow-md hover:shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out'>
+							Contact landlord
+						</button>
+					)}
+					{contactLandLord && (
+						<Contact userRef={listing.userRef} listing={listing} />
+					)}
 				</div>
 				<div className='bg-blue-300 w-full h-[200px]'></div>
 			</div>
