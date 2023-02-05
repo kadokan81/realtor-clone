@@ -19,6 +19,7 @@ import 'swiper/css/pagination';
 import { MdLocationOn } from 'react-icons/md';
 import { getAuth } from 'firebase/auth';
 import Contact from '../components/Contact';
+import LeafletMap from '../components/LeafletMap';
 
 export default function Listing() {
 	const [listing, setListing] = useState({
@@ -66,8 +67,8 @@ export default function Listing() {
 				loop={true}
 				effect={'fade'}
 				pagination={{ type: 'progressbar' }} /* cspell: disable-line */
-				onSlideChange={() => console.log('slide change')}
-				onSwiper={(swiper) => console.log(swiper)}>
+				onSlideChange={() => {}}
+				onSwiper={(swiper) => {}}>
 				{listing &&
 					listing.imgUrls.map((url, ind) => (
 						<SwiperSlide key={ind}>
@@ -175,7 +176,13 @@ export default function Listing() {
 						<Contact userRef={listing.userRef} listing={listing} />
 					)}
 				</div>
-				<div className='bg-blue-300 w-full h-[200px]'></div>
+				<div className='w-full h-[300px] md:h-[300px] lg:h-[400px] z-10 overflow-x-hidden'>
+					<LeafletMap
+						longitude={listing.longitude}
+						latitude={listing.latitude}
+						address={listing.address}
+					/>
+				</div>
 			</div>
 		</main>
 	);
