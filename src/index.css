@@ -27,3 +27,11 @@ body {
 .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
 	background: #a8dadc !important; /* cspell: disable-line */
 }
+
+html::-webkit-scrollbar {
+	display: none;
+}
+
+html {
+	scrollbar-width: none;
+}
