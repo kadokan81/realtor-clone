@@ -121,8 +121,6 @@ export default function Home() {
 									listing={listing.data}
 									key={listing.id}
 									id={listing.id}
-									onDelete={() => {}}
-									onEdit={() => {}}
 								/>
 							))}
 						</ul>
@@ -146,8 +144,6 @@ export default function Home() {
 									listing={listing.data}
 									key={listing.id}
 									id={listing.id}
-									onDelete={() => {}}
-									onEdit={() => {}}
 								/>
 							))}
 						</ul>
@@ -171,8 +167,6 @@ export default function Home() {
 									listing={listing.data}
 									key={listing.id}
 									id={listing.id}
-									onDelete={() => {}}
-									onEdit={() => {}}
 								/>
 							))}
 						</ul>
