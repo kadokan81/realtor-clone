@@ -31,9 +31,8 @@ export default function Category() {
 				);
 				const querySnap = await getDocs(q);
 				const lastVisible = querySnap.docs[querySnap.docs.length - 1];
-				console.log('lastVisible', lastVisible);
 				setLastFetchedListing(lastVisible);
-				console.log('lastFetchedListing', lastFetchedListing);
+
 				let listings = [];
 				querySnap.forEach((doc) => {
 					return listings.push({
@@ -48,7 +47,7 @@ export default function Category() {
 			}
 		}
 		fetchOffersListing();
-	}, []);
+	}, [params.categoryName]);
 
 	async function onFetchMoreListings() {
 		try {
@@ -101,13 +100,20 @@ export default function Category() {
 					</ul>
 				</div>
 			)}
-			{lastFetchedListing && (
+			{lastFetchedListing ? (
 				<div className='flex justify-center items-center'>
 					<button
 						onClick={onFetchMoreListings}
 						className='bg-white px-3 py-1.5 text-gray-700 border border-gray-300 mb-6 mt-6 hover:border-slate-600 rounded transition duration-150 ease-in-out'>
 						Load more
 					</button>
+				</div>
+			) : (
+				<div className='text-center  mx-auto sm:w-[50%]  bg-white px-3 py-1.5 text-gray-700 border-1 border-gray-300 rounded-md'>
+					There are no current{' '}
+					{params.categoryName === 'rent'
+						? 'places for rent'
+						: 'places for sale'}
 				</div>
 			)}
 		</div>
